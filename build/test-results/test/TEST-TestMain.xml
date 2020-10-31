@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="TestMain" tests="2" skipped="0" failures="0" errors="0" timestamp="2020-10-30T11:19:20" hostname="DESKTOP-74749FD" time="0.03">
+  <properties/>
+  <testcase name="testMain" classname="TestMain" time="0.026"/>
+  <testcase name="testSplitAndCount" classname="TestMain" time="0.004"/>
+  <system-out><![CDATA[Enter the name of input file : 
+Enter the name of Output file : 
+Enter the delimiter: 
+Enter the joiner: 
+Done.
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

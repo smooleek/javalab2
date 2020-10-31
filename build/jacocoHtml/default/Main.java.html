@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Main.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">smoolek</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">Main.java</span></div><h1>Main.java</h1><pre class="source lang-java linenums">import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Scanner;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+<span class="nc" id="L11">public class Main {</span>
+    private static final String quotes = &quot;\&quot;''&quot;;
+
+    public static void main(String[] args) throws Exception {
+<span class="fc" id="L15">        Scanner scanner = new Scanner(System.in);</span>
+        //РІРІРѕРґРёРјРѕ РґР°РЅС–
+<span class="fc" id="L17">        System.out.println(&quot;Enter the name of input file : &quot;);</span>
+<span class="fc" id="L18">        String input = scanner.next();</span>
+
+<span class="fc" id="L20">        File newFile = new File(input);</span>
+<span class="pc bpc" id="L21" title="1 of 2 branches missed.">        if (!newFile.exists()){</span>
+<span class="nc" id="L22">            throw new FileNotFoundException(newFile.getName());</span>
+        }
+<span class="fc" id="L24">        System.out.println(&quot;Enter the name of Output file : &quot;);</span>
+<span class="fc" id="L25">        String output = scanner.next();</span>
+<span class="fc" id="L26">        System.out.println(&quot;Enter the delimiter: &quot;);</span>
+<span class="fc" id="L27">        String inputDelimiter = scanner.next();</span>
+<span class="fc" id="L28">        System.out.println(&quot;Enter the joiner: &quot;);</span>
+<span class="fc" id="L29">        String outputDelimiter = scanner.next();</span>
+        //Р·Р°РґР°С”РјРѕ СЂРµРіСѓР»СЏСЂРЅРёР№ РІРёСЂР°Р· РґР»СЏ РїРѕС€СѓРєСѓ СЂРѕР·РґС–Р»СЊРЅРёРєС–РІ РІ СЂСЏРґРєР°С… С„Р°Р№Р»Сѓ
+<span class="fc" id="L31">        String regex = String.format(&quot;%1$s(?=(?:[^%2$s]*[%2$s][^%2$s]*[%2$s])*[^%2$s]*$)&quot;, inputDelimiter, quotes);</span>
+<span class="fc" id="L32">        Pattern pattern = Pattern.compile(regex);</span>
+        //Р·С‡РёС‚СѓС”РјРѕ СЂСЏРґРєРё С„Р°Р№Р»Сѓ, СЂРѕР·Р±РёРІР°С”    РјРѕ РЅР° СЃР»РѕРІР°, СЂР°С…СѓС”РјРѕ РєС–Р»СЊРєС–СЃС‚СЊ СЃРёРјРІРѕР»С–РІ С‚Р° Р·Р±РёСЂР°С”РјРѕ РІ СЃРїРёСЃРѕРє
+<span class="fc" id="L34">        List&lt;String&gt; result = Main.splitAndCount(input, outputDelimiter, pattern);</span>
+        //Р·Р°РїРёСЃСѓС”РјРѕ СЂРµР·СѓР»СЊС‚Р°С‚ Сѓ РІРёС…С–РґРЅРёР№ С„Р°Р№Р» С‚Р° РїРѕРІС–РґРѕРјР»СЏС”РјРѕ РєРѕСЂРёСЃС‚СѓРІР°С‡Р°
+<span class="fc" id="L36">        Files.write(Path.of(output), result);</span>
+<span class="fc" id="L37">        System.out.println(&quot;Done.&quot;);</span>
+<span class="fc" id="L38">    }</span>
+
+
+    public static List&lt;String&gt; splitAndCount(String path, String outputDelimiter, Pattern pattern) throws IOException {
+<span class="fc" id="L42">        return Files.lines(Path.of(path))</span>
+<span class="fc" id="L43">                .map(line -&gt;</span>
+<span class="fc" id="L44">                        pattern.splitAsStream(line)</span>
+<span class="fc" id="L45">                                .map(Main::trimQuotes)</span>
+<span class="fc" id="L46">                                .map(x -&gt; String.valueOf(x.length()))</span>
+<span class="fc" id="L47">                                .collect(Collectors.joining(outputDelimiter)))</span>
+<span class="fc" id="L48">                .collect(Collectors.toList());</span>
+    }
+
+    private static String trimQuotes(String str) {
+<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (str.length() &gt;= 2 &amp;&amp;</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">                quotes.indexOf(str.charAt(0)) != -1 &amp;&amp;</span>
+<span class="pc bpc" id="L54" title="1 of 2 branches missed.">                quotes.indexOf(str.charAt(str.length() - 1)) != -1) {</span>
+
+<span class="fc" id="L56">            return str.substring(1, str.length() - 1);</span>
+        }
+<span class="fc" id="L58">        return str;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
